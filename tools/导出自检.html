@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>图说 · 导出路径自检</title>
+</head>
+<body>
+<!--
+  这个页面不给人看，是给无头浏览器跑的：
+  chrome --headless=new --dump-dom --virtual-time-budget=6000 tools/导出自检.html
+  它真跑一遍「SVG → canvas → PNG」，把结果写在 #结论 里，用来确认导出这条路没坏。
+-->
+<div id="结论">运行中…</div>
+<script src="../assets/typography.js" charset="utf-8"></script>
+<script src="../assets/engine.js" charset="utf-8"></script>
+<script src="../assets/themes.js" charset="utf-8"></script>
+<script src="../assets/render.js" charset="utf-8"></script>
+<script src="../assets/export.js" charset="utf-8"></script>
+<script>
+(async function () {
+  const 输出 = document.getElementById('结论');
+  try {
+    const 文字 = '第一个月的数据\n新增粉丝 1200\n成交 38 单\n复购率 42%';
+    const 数据 = window.图说引擎.结构化(文字, '自动');
+    const 出 = window.图说渲染.渲染(数据, { 比例: '小红书 3:4', 主题: '夜幕', 落款: '导出自检' });
+    const 画布 = await window.图说导出.svg转画布(出.svg, 2);
+    const 笔 = 画布.getContext('2d');
+    const 角 = 笔.getImageData(3, 3, 1, 1).data;
+    const 中 = 笔.getImageData(Math.round(画布.width / 2), Math.round(画布.height * 0.1), 1, 1).data;
+    const 块 = await new Promise((成) => 画布.toBlob((b) => 成(b), 'image/png'));
+    输出.textContent = '结论 画布=' + 画布.width + 'x' + 画布.height
+      + ' 角像素=' + 角[0] + ',' + 角[1] + ',' + 角[2]
+      + ' 中部像素=' + 中[0] + ',' + 中[1] + ',' + 中[2]
+      + ' PNG字节=' + (块 ? 块.size : 0)
+      + ' 判型=' + 数据.类型;
+  } catch (错) {
+    输出.textContent = '结论 失败：' + 错.message;
+  }
+})();
+</script>
+</body>
+</html>

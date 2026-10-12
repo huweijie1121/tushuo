@@ -1,0 +1,355 @@
+/* 图说 · 界面样式
+ * 纸墨底色 + 朱红点缀，跟图里的配色是一套；UI 不抢内容的注意力。
+ */
+
+:root {
+  --纸: #F6F5F1;
+  --面: #FFFFFF;
+  --墨: #231E18;
+  --淡: #6E6459;
+  --线: #E5E0D6;
+  --主: #A8322D;
+  --主浅: #F0E4E1;
+  --字体: "Microsoft YaHei", "微软雅黑", "PingFang SC", "Hiragino Sans GB", "Source Han Sans SC", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--纸);
+  color: var(--墨);
+  font-family: var(--字体);
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-text-size-adjust: 100%;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* ---------- 顶栏 ---------- */
+
+.顶栏 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 22px;
+  background: var(--面);
+  border-bottom: 1px solid var(--线);
+  position: sticky;
+  top: 0;
+  z-index: 9;
+}
+
+.品牌 { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+
+.标 {
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--主);
+}
+
+.释 { color: var(--淡); font-size: 13px; }
+
+.顶右 { display: flex; align-items: center; gap: 8px; }
+
+/* ---------- 三栏 ---------- */
+
+.三栏 {
+  display: grid;
+  /* minmax(0, …) 不能省：写 1fr 时最小宽度是 min-content，
+     里面 1080px 宽的 SVG 会把整栏撑破，手机上就横向溢出了 */
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr) minmax(0, 320px);
+  gap: 16px;
+  padding: 16px 22px 8px;
+  align-items: start;
+}
+
+.栏 {
+  min-width: 0;
+  background: var(--面);
+  border: 1px solid var(--线);
+  border-radius: 12px;
+  padding: 14px 16px 18px;
+}
+
+.栏头 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--淡);
+}
+
+.预览栏 { position: sticky; top: 68px; }
+
+.预览头 { display: flex; align-items: baseline; justify-content: space-between; }
+
+.尺寸 { font-size: 12px; color: var(--淡); font-variant-numeric: tabular-nums; }
+
+/* ---------- 输入 ---------- */
+
+.文字框 {
+  width: 100%;
+  min-height: 240px;
+  padding: 12px;
+  border: 1px solid var(--线);
+  border-radius: 10px;
+  background: #FCFBF8;
+  line-height: 1.8;
+  resize: vertical;
+}
+
+.文字框:focus, .数据框:focus, input:focus, select:focus {
+  outline: 2px solid var(--主浅);
+  border-color: var(--主);
+}
+
+.行 { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+
+/* ---------- 按钮 ---------- */
+
+button {
+  padding: 8px 12px;
+  border: 1px solid var(--线);
+  border-radius: 9px;
+  background: var(--面);
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+
+button:hover { border-color: var(--主); }
+
+.主钮 {
+  background: var(--主);
+  border-color: var(--主);
+  color: #FFF;
+  font-weight: 600;
+}
+
+.主钮:hover { background: #932B26; }
+
+.小钮 { padding: 5px 10px; font-size: 13px; }
+
+.小钮.选中 {
+  background: var(--主);
+  border-color: var(--主);
+  color: #FFF;
+  font-weight: 600;
+}
+
+.链接钮 {
+  border: 0;
+  background: none;
+  padding: 0 0 0 6px;
+  color: var(--主);
+  text-decoration: underline;
+}
+
+.小选 { padding: 6px 8px; border: 1px solid var(--线); border-radius: 9px; background: var(--面); }
+
+/* ---------- 画布 ---------- */
+
+.画布 {
+  min-width: 0;
+  margin-top: 6px;
+  padding: 12px;
+  border-radius: 10px;
+  background:
+    linear-gradient(45deg, #EFECE5 25%, transparent 25%, transparent 75%, #EFECE5 75%),
+    linear-gradient(45deg, #EFECE5 25%, transparent 25%, transparent 75%, #EFECE5 75%);
+  background-size: 18px 18px;
+  background-position: 0 0, 9px 9px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 220px;
+}
+
+.画布 svg {
+  max-width: 100%;
+  max-height: 66vh;
+  width: auto;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 8px 26px rgba(35, 30, 24, .12);
+}
+
+.空状态 {
+  color: var(--淡);
+  text-align: center;
+  padding: 60px 20px;
+  line-height: 2;
+  font-size: 14px;
+}
+
+.提示 { color: var(--主); font-size: 13px; margin-top: 8px; }
+
+.依据 {
+  font-size: 13px;
+  color: var(--淡);
+  margin-top: 8px;
+  line-height: 2;
+}
+
+.点子 {
+  display: inline-block;
+  margin: 0 6px 0 0;
+  padding: 1px 8px;
+  border-radius: 20px;
+  background: var(--主浅);
+  color: #7A2723;
+  font-size: 12px;
+}
+
+/* ---------- 折叠区 ---------- */
+
+.折叠 {
+  margin-top: 12px;
+  border: 1px solid var(--线);
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: #FCFBF8;
+}
+
+.折叠 > summary { cursor: pointer; font-size: 13px; color: var(--淡); font-weight: 600; }
+
+.折叠 .折叠 { background: var(--面); }
+
+.说明 { font-size: 12.5px; color: var(--淡); line-height: 1.9; }
+
+.提示词 {
+  white-space: pre-wrap;
+  font-size: 12px;
+  color: var(--淡);
+  background: var(--面);
+  border: 1px solid var(--线);
+  border-radius: 8px;
+  padding: 10px;
+  margin: 8px 0 0;
+}
+
+.提示条 { margin-top: 10px; font-size: 13px; color: var(--主); }
+
+/* ---------- 字段 ---------- */
+
+.字段 { display: block; margin-top: 12px; font-size: 13px; color: var(--淡); }
+
+.字段 input[type=text], .字段 input[type=password] {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 7px 9px;
+  border: 1px solid var(--线);
+  border-radius: 8px;
+  background: var(--面);
+}
+
+.字段 select {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 7px 9px;
+  border: 1px solid var(--线);
+  border-radius: 8px;
+  background: var(--面);
+}
+
+.字段 input[type=range] { width: 100%; margin-top: 6px; accent-color: var(--主); }
+
+.值 { float: right; font-variant-numeric: tabular-nums; }
+
+.组 { margin-top: 14px; }
+
+.小标签 { display: block; font-size: 13px; color: var(--淡); margin-bottom: 6px; }
+
+.条 { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.勾选组 { margin-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+.勾 { font-size: 13px; color: var(--淡); display: flex; align-items: center; gap: 6px; }
+
+.文字输入 {
+  width: 100%;
+  margin-top: 8px;
+  padding: 7px 9px;
+  border: 1px solid var(--线);
+  border-radius: 8px;
+}
+
+.色块 {
+  width: 46px;
+  height: 30px;
+  padding: 0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  overflow: hidden;
+}
+
+.色块 span { width: 5px; height: 16px; border-radius: 3px; }
+
+.色块.选中 { border-color: var(--主); box-shadow: 0 0 0 2px var(--主浅); }
+
+.导出条 { margin-top: 16px; display: grid; gap: 7px; }
+
+.数据框 {
+  width: 100%;
+  min-height: 150px;
+  margin: 6px 0 8px;
+  padding: 10px;
+  border: 1px solid var(--线);
+  border-radius: 8px;
+  background: var(--面);
+  font-family: "Cascadia Mono", Consolas, Menlo, monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+/* ---------- 页脚 ---------- */
+
+.页脚 {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 22px 22px;
+  color: var(--淡);
+  font-size: 12.5px;
+}
+
+/* ---------- 纯净模式（投屏 / 截图 / 只想要图） ---------- */
+
+body.纯净 .顶栏, body.纯净 .栏:not(.预览栏), body.纯净 .页脚,
+body.纯净 .预览头, body.纯净 .依据, body.纯净 .提示, body.纯净 .数据区 { display: none; }
+
+body.纯净 .三栏 { grid-template-columns: 1fr; padding: 0; gap: 0; }
+body.纯净 .栏 { border: 0; border-radius: 0; padding: 0; background: none; }
+body.纯净 .画布 { padding: 0; margin: 0; background: none; border-radius: 0; min-height: 0; }
+body.纯净 .画布 svg { max-width: none; max-height: none; width: 100vw; height: 100vh; border-radius: 0; box-shadow: none; }
+body.纯净 .预览栏 { position: static; }
+
+/* ---------- 窄屏 ---------- */
+
+@media (max-width: 1080px) {
+  .三栏 { grid-template-columns: minmax(0, 1fr); padding: 12px; }
+  .预览栏 { position: static; }
+  .画布 svg { max-height: 58vh; }
+  .释 { display: none; }
+  .顶栏 { padding: 12px 14px; }
+  .顶右 { flex-wrap: wrap; justify-content: flex-end; }
+}
+
+@media print {
+  .顶栏, .栏:not(.预览栏), .页脚, #依据, #提示, .数据区, .预览头 { display: none; }
+  .三栏 { grid-template-columns: 1fr; padding: 0; }
+  .栏, .画布 { border: 0; padding: 0; background: none; }
+  .画布 svg { max-height: none; width: 100%; box-shadow: none; }
+}

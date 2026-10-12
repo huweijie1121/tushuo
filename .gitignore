@@ -1,0 +1,16 @@
+# 出图临时产物
+out/
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+
+# 系统
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Python 虚拟环境（如果用得上）
+.venv/
+__pycache__/

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>图说 · 把一段中文变成一张图</title>
+<meta name="description" content="贴一段中文，自动排成信息图：步骤流程、时间线、左右对比、数据卡、层级金字塔、思维导图。开源、免费、离线可用、无品牌水印。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23A8322D'/%3E%3Ctext x='16' y='24' font-size='21' text-anchor='middle' fill='%23F7F3EA' font-family='sans-serif'%3E%E5%9B%BE%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+
+<header class="顶栏">
+  <div class="品牌">
+    <span class="标">图说</span>
+    <span class="释">贴一段中文，出一张图 · 开源免费 · 不上传</span>
+  </div>
+  <div class="顶右">
+    <select id="示例" class="小选">
+      <option value="">看一个示例</option>
+    </select>
+    <button id="打印" class="小钮">打印 / 存 PDF</button>
+  </div>
+</header>
+
+<main class="三栏">
+
+  <section class="栏">
+    <h2 class="栏头">① 贴文字</h2>
+    <textarea id="文字" class="文字框" spellcheck="false"
+      placeholder="把草稿贴进来就行：&#10;· 一条视频的分步脚本&#10;· 报价或流程的要点&#10;· 一段带数字的月度总结&#10;&#10;第一行短句会被当成标题。"></textarea>
+
+    <div class="行">
+      <button id="ai结构化" class="主钮">用 AI 整理一遍（可选）</button>
+    </div>
+    <div id="AI提示" class="提示条" hidden></div>
+
+    <details id="ai区" class="折叠">
+      <summary>AI 接口设置（不填也能用）</summary>
+      <p class="说明">不填 Key 时，图型靠内置的中文规则判断，一样能出图。填了就用模型直接整理成结构。</p>
+      <label class="字段">接口地址
+        <input id="ai地址" type="text" placeholder="https://api.deepseek.com/v1">
+      </label>
+      <label class="字段">模型
+        <input id="ai模型" type="text" placeholder="deepseek-chat">
+      </label>
+      <label class="字段">API Key
+        <input id="aiKey" type="password" placeholder="sk-...">
+      </label>
+      <p class="说明">只存在你自己浏览器的本地存储里，不会发给图说以外的地方；请求直接从浏览器发往你填的接口。国内的 DeepSeek、通义、智谱、魔搭都兼容这个格式。</p>
+      <details class="折叠">
+        <summary>看看发给模型的原话（可复核）</summary>
+        <pre class="提示词">你是中文信息图编辑。把用户给的文字整理成一张信息图的数据，只输出 JSON。
+字段：标题（≤16 字）、副标题、类型（要点/步骤/时间线/对比/数据/层级/导图）、
+条目（标签 ≤12 字 + 说明 ≤40 字）、时间线加「时间」字段、
+对比分左右两侧、数据只要「数值 + 单位 + 标签 + 备注」、导图给「中心 + 分支 + 子项」。
+数字与单位一律保留原值，不四舍五入、不编造。</pre>
+      </details>
+    </details>
+  </section>
+
+  <section class="栏 预览栏">
+    <div class="预览头">
+      <h2 class="栏头">② 出图</h2>
+      <span id="尺寸" class="尺寸"></span>
+    </div>
+    <div id="画布" class="画布"></div>
+    <div id="提示" class="提示"></div>
+    <div id="依据" class="依据"></div>
+    <details class="折叠 数据区">
+      <summary>数据（可以直接改，改完点应用）</summary>
+      <textarea id="数据框" class="数据框" spellcheck="false"></textarea>
+      <button id="应用数据" class="小钮">应用数据</button>
+    </details>
+  </section>
+
+  <section class="栏">
+    <h2 class="栏头">③ 调样式</h2>
+
+    <div id="类型区" class="组">
+      <span class="小标签">图型</span>
+      <div id="类型条" class="条"></div>
+    </div>
+
+    <div class="组">
+      <span class="小标签">配色</span>
+      <div id="主题条" class="条"></div>
+    </div>
+
+    <label class="字段">画布
+      <select id="比例"></select>
+    </label>
+
+    <label class="字段">字号 <span id="字号值" class="值">100%</span>
+      <input id="字号" type="range" min="70" max="140" step="2" value="100">
+    </label>
+
+    <div class="勾选组">
+      <label class="勾"><input type="checkbox" id="混排" checked> 中英之间加空隙</label>
+      <label class="勾"><input type="checkbox" id="显示标题" checked> 显示标题</label>
+      <label class="勾"><input type="checkbox" id="显示编号" checked> 显示序号</label>
+      <label class="勾"><input type="checkbox" id="显示落款" checked> 显示落款</label>
+    </div>
+    <input id="落款" class="文字输入" type="text" value="图说 · 免费开源" placeholder="落款文字，留空即不显示">
+
+    <div id="导出条" class="导出条">
+      <button id="存PNG2" class="主钮">存 PNG（2 倍，手机发图够用）</button>
+      <button id="存PNG3">存 PNG（3 倍，印刷/放大）</button>
+      <button id="存SVG">存 SVG（矢量，可进 Figma）</button>
+      <button id="复制SVG">复制 SVG 源码</button>
+    </div>
+    <p class="说明">建议：小红书贴 3:4、公众号正文插 16:9、朋友圈用 1:1。图片在你自己的浏览器里生成，不上传、不排队、没有水印。</p>
+  </section>
+
+</main>
+
+<footer class="页脚">
+  <span>图说 · 一个开源的「把文字变成图」小工具</span>
+  <span>MIT 许可 · 可自由商用 · 无字数点数限制</span>
+</footer>
+
+<script src="assets/typography.js" charset="utf-8"></script>
+<script src="assets/engine.js" charset="utf-8"></script>
+<script src="assets/themes.js" charset="utf-8"></script>
+<script src="assets/render.js" charset="utf-8"></script>
+<script src="assets/export.js" charset="utf-8"></script>
+<script src="assets/app.js" charset="utf-8"></script>
+</body>
+</html>
